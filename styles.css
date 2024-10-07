@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+#navbar {
+    height: 60px;
+    background: steelblue;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    justify-content: center;
+}
+
+.link {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-right: 1rem;
+}
