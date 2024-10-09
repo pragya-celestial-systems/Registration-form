@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- font awesome CDN -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- css stylesheet -->
     <link rel="stylesheet" href="./styles.css">
 
-    <title>Form and Table</title>
+    <title>Registration Form</title>
 </head>
+
 <body>
     <!-- <input type="file" id="profileImg">
     <img src="" alt="profile-img"  id="img"> -->
@@ -18,24 +23,57 @@
     </nav>
 
     <main id="content">
-        <form id="userdataForm">
-            <input type="text" id="username" placeholder="Username">
-            <input type="email" id="email" placeholder="abc@example.com">
-            <input type="number" id="number" placeholder="+91 9928232017">
-            <label for="gender">Male</label>
-            <input type="radio" class="gender" name="gender" value="Male">
-            <label for="gender">Female</label>
-            <input type="radio" class="gender" name="gender" value="Female">
-            <select name="qualification" id="qualification">
-                <option value="secondary">Secondary</option>
-                <option value="senior secondary">Senior Secondary</option>
-                <option value="graduation">Graduation</option>
-                <option value="post graduation">Post Graduation</option>
-            </select>
-            <button type="submit">Submit</button>
-        </form>
+        <div class="form">
+            <h1 id="formHeading">Registration Form</h1>
+            <form id="userdataForm">
+                <p id="error"></p>
+                <div class="box">
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="email" id="email" placeholder="abc@example.com">
+                </div>
+                <div class="box">
+                    <input type="number" id="number" placeholder="Phone number">
+                    <input type="file" id="profileImg" accept="image/*">
+                </div>
+                <div class="box">
+                    <div id="leftBox">
+                        <div class="radio">
+                            <label for="gender">Male</label>
+                            <input type="radio" class="gender" name="gender" value="Male">
+                        </div>
+                        <div class="radio">
+                            <label for="gender">Female</label>
+                            <input type="radio" class="gender" name="gender" value="Female">
+                        </div>
+                    </div>
+                    <div id="rightBox">
+                        <select name="qualification" id="qualification" value="Graduation">
+                            <option value="secondary">Secondary</option>
+                            <option value="senior secondary">Senior Secondary</option>
+                            <option value="graduation">Graduation</option>
+                            <option value="post graduation">Post Graduation</option>
+                        </select>
+                    </div>
+                </div>
+                <img src="" alt="" id="imageContainer" />
+                <div class="btn-container">
+                    <button type="button" id="resetBtn">Reset</button>
+                    <button type="submit" id="submitBtn">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <table class="table" border="1">
+            <tr>
+                <th>Sr. No</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Actions</th>
+            </tr>
+        </table>
     </main>
-    
+
 
     <!-- --------------------------------- -->
     <script src="./script.js"></script
