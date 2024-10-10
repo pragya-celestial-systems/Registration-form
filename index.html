@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- data table CDN -->
+     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+  
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script> -->
+
+    <!-- jQuery CDN -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> -->
+
     <!-- font awesome CDN -->
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -48,10 +56,10 @@
                     </div>
                     <div id="rightBox">
                         <select name="qualification" id="qualification" value="Graduation">
-                            <option value="secondary">Secondary</option>
-                            <option value="senior secondary">Senior Secondary</option>
-                            <option value="graduation">Graduation</option>
-                            <option value="post graduation">Post Graduation</option>
+                            <option value="Secondary">Secondary</option>
+                            <option value="Senior Secondary">Senior Secondary</option>
+                            <option value="Graduation">Graduation</option>
+                            <option value="Post Graduation">Post Graduation</option>
                         </select>
                     </div>
                 </div>
@@ -67,15 +75,20 @@
             <tr>
                 <th>Sr. No</th>
                 <th>Username</th>
+                <th>Gender</th>
                 <th>Email</th>
+                <th>Qualification</th>
                 <th>Contact</th>
                 <th>Actions</th>
             </tr>
         </table>
+
+        <div class="backdrop hidden-backdrop">
+            <div id="modal">
+            </div>
+        </div>
     </main>
-
-
     <!-- --------------------------------- -->
-    <script src="./script.js"></script
+    <script src="./script.js"></script>
 </body>
 </html>

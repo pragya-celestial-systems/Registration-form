@@ -1,27 +1,5 @@
 'usestrict';
 
-// const profileImg = document.querySelector('#profileImg');
-// const img = document.querySelector('#img');
-
-// profileImg.addEventListener('change', (e) => {
-//     console.log(e.target.files[0]);
-//     parseURI(e.target.files[0]);
-// })
-
-// async function parseURI(d) {
-//   var reader = new FileReader();
-//   reader.readAsDataURL(d);
-  // return new Promise ((res, rej) => {
-  //   reader.onload = (e) => {
-  //       res(e.target.result);
-  //       localStorage.setItem('image', e.target.result);
-  //   };
-  // });
-// }
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     img.setAttribute("src", localStorage.getItem('image'));
-// })
 const inputEl = document.querySelectorAll("input");
 const form = document.querySelector("#userdataForm");
 const gender = document.querySelectorAll(".gender");
@@ -33,13 +11,14 @@ const image = document.querySelector("#profileImg");
 const errorEl = document.querySelector("#error");
 const imageContainer = document.querySelector("#imageContainer");
 const resetBtn = document.querySelector("#resetBtn");
+const submitBtn = document.querySelector("#submitBtn");
 const formContainer = document.querySelector('.form');
 const tableContainer = document.querySelector('.table');
 const navLink = document.querySelectorAll('.link');
-// const trash = document.querySelector('.fa-pen-to');
-const viewButtons = document.querySelectorAll('.fa-eye');
+const backdropContainer = document.querySelector('.backdrop');
+const modal = document.querySelector('#modal');
 
-let errorMessage, imageUrl, trashButtons;
+let errorMessage, imageUrl, trashButtons, editButtons, viewButtons, isEditing = false;
 
 // --------------------------------------------------------
 
@@ -75,14 +54,50 @@ function validateAndUploadImage(d) {
 
 function addUserInTheTable(user, index) {
   const html = `<tr>
-                <td>${index}</td>
+                <td>${index + 1}</td>
                 <td>${user.username}</td>
                 <td>${user.email}</td>
+                <td>${user.gender}</td>
+                <td>${user.qualification}</td>
                 <td>${user.number}</td>
                 <td><i class="fa-regular fa-eye"></i><i class="fa-regular fa-pen-to-square"></i><i class="fa-solid fa-trash"></i></td>
             </tr>`;
-  
+
   tableContainer.insertAdjacentHTML('beforeend', html);
+}
+
+function resetInput() {
+  username.value = "";
+  email.value = "";
+  number.value = "";
+
+  gender.forEach((btn) => (btn.checked = false));
+  console.log(qualification[qualification.selectedIndex]);
+  image.value = "";
+  imageContainer.removeAttribute("src");
+  imageContainer.style.display = "none";
+}
+
+function findUser(email) {
+  const users = JSON.parse(localStorage.getItem('users'));
+
+  if (users.length <= 0) return false;
+
+  return users.find(user => user.email === email);
+}
+
+function createModalContent(user) {
+  const modalContent = `
+     <div id="modalContent">
+        <p class="modal-username"><b>Username : </b>${user.username}</p>
+        <p class="modal-email"><b>Email : </b>${user.email}</p>
+        <p class="modal-gender"><b>Gender : </b>${user.gender}</p>
+        <p class="modal-qualification"><b>Qualication : </b>${user.qualification}</p>
+        <p class="contact"><b>Contact : </b>${user.number}</p>
+    </div>
+  `;
+
+  modal.insertAdjacentHTML('afterbegin', modalContent);
 }
 
 // --------------------------------------------
@@ -124,12 +139,19 @@ form.addEventListener("submit", async (e) => {
   );
 
   if (validate !== "success") {
-    errorEl.style.opacity  =1;
+    errorEl.style.opacity = 1;
     errorEl.textContent = validate;
     return;
   }
 
-  errorEl.style.opacity  = 0;
+  const user = findUser(email.value);
+  if (user) {
+    errorEl.style.opacity = 1;
+    errorEl.textContent = 'User already exists.';
+    return;
+  }
+
+  errorEl.style.opacity = 0;
 
   let base64Image;
   try {
@@ -159,56 +181,104 @@ form.addEventListener("submit", async (e) => {
   const users = JSON.parse(localStorage.getItem("users")) || [];
   users.push(userData);
   localStorage.setItem("users", JSON.stringify(users));
-  console.log("Users saved:", users);
+
+  resetInput();
 });
+
+// ------------------------------------------------
 
 resetBtn.addEventListener("click", () => {
-  // Clear form fields
-  username.value = "";
-  email.value = "";
-  number.value = "";
-
-  gender.forEach(btn => btn.checked = false); 
-  console.log(qualification[qualification.selectedIndex]);
-  image.value = "";
-  imageContainer.removeAttribute("src");
-  imageContainer.style.display = "none"; 
+  resetInput();
 });
 
-window.addEventListener('DOMContentLoaded', () => {
-  tableContainer.classList.add('active');
-  const users = JSON.parse(localStorage.getItem('users'));
+// ------------------------------------------------
 
-  users.forEach((user, index) => { 
-    addUserInTheTable(user, index)
+window.addEventListener('DOMContentLoaded', () => {
+  submitBtn.textContent = "Submit";
+  tableContainer.classList.add("active");
+  const users = JSON.parse(localStorage.getItem("users"));
+
+  users.forEach((user, index) => {
+    addUserInTheTable(user, index);
   });
 
   trashButtons = document.querySelectorAll(".fa-trash");
 
-  // add event listeners to all trash buttons
-  trashButtons.forEach((btn, index) => {
-    btn.addEventListener('click', () => {
-      const confirm = window.confirm('Are you sure you  want to delete this entry?');
+  editButtons = document.querySelectorAll(".fa-pen-to-square");
+
+  viewButtons = document.querySelectorAll(".fa-eye");
+
+  // if user clicks on the edit button
+  editButtons.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      const emailAddress = btn.closest("tr").cells[2].textContent;
+
+      const user = findUser(emailAddress);
+
+      const confirm = window.confirm("Do you want to edit this entry?");
 
       if (!confirm) return;
 
-      const emailAddress = btn.closest('tr').cells[2].textContent;
-      
-      const idx = users.findIndex(user => user.email === emailAddress);
+      tableContainer.classList.remove("active");
+      formContainer.classList.add("active");
+
+      console.log(user);
+      username.value = user.username;
+      email.value = user.email;
+      number.value = user.number;
+
+      isEditing = true;
+    });
+  });
+
+  // add event listeners to all trash buttons
+  trashButtons.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      const confirm = window.confirm(
+        "Are you sure you  want to delete this entry?"
+      );
+
+      if (!confirm) return;
+
+      const emailAddress = btn.closest("tr").cells[2].textContent;
+
+      const idx = users.findIndex((user) => user.email === emailAddress);
 
       // remove the the user from the array and save the updated users array in the local storage
-      users.splice(idx, 1)
-      localStorage.setItem('users', JSON.stringify(users));
+      users.splice(idx, 1);
+      localStorage.setItem("users", JSON.stringify(users));
 
       window.location.reload();
 
       // btn.parentElement.parentElement.remove()
-      
+
       // remove from the local storage
+    });
+    // console.log(btn.parentElement.parentElement);
+  });
+
+  // show a modal if user clicks on the view button
+  viewButtons.forEach((btn, index) => {
+    btn.addEventListener('click', (e) => {
+      const emailAddress = e.target.closest('tr').cells[2].textContent;
+      const user = findUser(emailAddress);
+      console.log(user);
+
+      if (!user) {
+        alert("Couldn't find user.");
+        return;
+      }
+
+      backdropContainer.classList.toggle('hidden-backdrop');
+
+      createModalContent(user);
 
     })
-    // console.log(btn.parentElement.parentElement);
   })
+})
+
+backdropContainer.addEventListener('click', () => {
+  backdropContainer.classList.toggle('hidden-backdrop');
 })
 
 navLink.forEach(link => {

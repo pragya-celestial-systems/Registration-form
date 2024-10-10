@@ -29,6 +29,10 @@ html, body {
 
 /* ------------ main content ---------- */
 
+i{
+    margin-right: 1rem;
+}
+
 #content  {
     height: 93vh;
     width: 100svw;
@@ -145,4 +149,43 @@ select {
 
 i{
     cursor: pointer;
+}
+
+table, th, td {
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 1rem;
+}
+
+
+.backdrop {
+    display: flex;
+}
+
+.backdrop{
+    display: flex;
+    height: 100svh;
+    width: 100svw;
+    background: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden-backdrop {
+    display: none;
+}
+
+#modal {
+    height: 50svh;
+    width: 50svw;
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 0 15px #00000060;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
