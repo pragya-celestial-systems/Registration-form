@@ -51,7 +51,7 @@ i{
     display: flex;
     align-items: center;
     flex-direction: column;
-    background: whitesmoke;
+    /* background: whitesmoke; */
     width: 60svw;
     border-radius: 25px;
     margin: auto;
@@ -64,7 +64,7 @@ i{
     color: #d00000;
     background: #ff00001a;
     padding: 1rem;
-    width: 100%;
+    width: 80%;
     border-radius: 15px;
     border: 2px solid #ff00003b;
 }
@@ -80,7 +80,7 @@ i{
 input  {
     padding: 1rem;
     width: 45%;
-    border: none;
+    border: 1px solid lightgrey;
     border-radius: 8px;
 }
 
@@ -179,13 +179,22 @@ td, th {
     display: none;
 }
 
+/* ---------------modal----------------- */
+
 #modal {
-    height: 50svh;
-    width: 50svw;
+    max-height: 50svh;
+    max-width: 50svw;
     background: white;
     border-radius: 25px;
     box-shadow: 0 0 15px #00000060;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: scroll;
+    padding: 2rem;
+}
+
+#modalImg {
+    height: 150px;
+    width: 150px;
 }
