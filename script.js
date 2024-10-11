@@ -8,7 +8,7 @@ const number = document.querySelector("#number");
 const email = document.querySelector("#email");
 const qualification = document.querySelector("#qualification");
 const image = document.querySelector("#profileImg");
-const errorEl = document.querySelector("#error");
+const messageEl = document.querySelector("#message");
 const imageContainer = document.querySelector("#imageContainer");
 const resetBtn = document.querySelector("#resetBtn");
 const submitBtn = document.querySelector("#submitBtn");
@@ -32,24 +32,46 @@ function validateInput(username, email, number, qualification, dob) {
   }
   else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
     return "Email is not valid.";
-  } else if (number.length !== 10 || number < 0) {
+  }
+  else if (number.length !== 10 || number < 0) {
     return "Number should contain 10 positive digits.";
-  } else if (!qualification) {
+  }
+  else if (!qualification) {
     return "Please select qualification.";
   }
   else if (dob.length <= 0) {
     return 'Please enter your date of birth.';
   }
-  return "success";
+  else {
+    return "success";
+  }
 }
 
-function blobToBase64(blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(blob);
-  });
+function displayAlert(msg, className) {
+  // reset existing styles and text content
+  messageEl.classList.remove('error', 'success');
+  
+  // apply the nnew styles and display the error message
+  messageEl.classList.add(className);
+  messageEl.textContent = msg;
+  messageEl.style.opacity = 1;
 }
+
+function deleteExistingData() {
+  const rowsToDelete = tableContainer.rows.length - 1;
+
+  for (let i = 0; i < rowsToDelete; i++) {
+    tableContainer.deleteRow(1); // 
+  }
+}
+
+// function blobToBase64(blob) {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
+//     reader.onloadend = () => resolve(reader.result);
+//     reader.readAsDataURL(blob);
+//   });
+// }
 
 
 function validateAndUploadImage(d) {
@@ -76,6 +98,7 @@ function addUserInTheTable(user, index) {
 }
 
 function resetInput() {
+
   name.value = "";
   email.value = "";
   number.value = "";
@@ -85,8 +108,8 @@ function resetInput() {
   image.value = "";
   imageContainer.removeAttribute("src");
   imageContainer.style.display = "none";
-  errorEl.textContent = '';
-  errorEl.style.opacity = 0;
+  messageEl.textContent = '';
+  messageEl.style.opacity = 0;
 }
 
 function findUser(email) {
@@ -133,17 +156,16 @@ function setMaxDateToToday() {
 
 inputEl.forEach((el) => {
   el.addEventListener("focus", () => {
-    errorEl.style.opacity = 0;
+    messageEl.style.opacity = 0;
   });
 });
 
 profileImg.addEventListener("change", async (e) => {
   if (e.target.files.length === 0) {
-    errorEl.textContent = "Image is required.";
+    displayAlert('Image is required', 'error');
     return;
   }
 
-  errorEl.textContent = "";
   imageUrl = e.target.files[0];
   imageContainer.style.display = "block";
 
@@ -151,7 +173,7 @@ profileImg.addEventListener("change", async (e) => {
     const base64 = await validateAndUploadImage(imageUrl);
     imageContainer.setAttribute("src", base64);
   } catch (err) {
-    errorEl.textContent = 'Error uploading the image.'
+    displayAlert('Image is required', 'error');
   }
 });
 
@@ -169,8 +191,7 @@ form.addEventListener("submit", async (e) => {
   );
 
     if (res !== "success") {
-      errorEl.style.opacity = 1;
-      errorEl.textContent = res;
+      displayAlert(res, 'error');
       return;
     }
 
@@ -183,28 +204,25 @@ form.addEventListener("submit", async (e) => {
   })
 
   if (selectedGender === undefined) {
-    errorEl.textContent = 'Please select the gender.'
-    errorEl.style.opacity = 1;
+    displayAlert('Please select the gender.', 'error');
     return;
   }
 
   const user = findUser(email.value);
   if (!isEditing) {
     if (user) {
-      errorEl.style.opacity = 1;
-      errorEl.textContent = 'User already exists.';
+      displayAlert('User already exists.', 'error');
       return;
     }
   }
 
-  errorEl.style.opacity = 0;
+  messageEl.style.opacity = 0;
 
   let base64Image;
   try {
     base64Image = await validateAndUploadImage(imageUrl);
   } catch (err) {
-    errorEl.textContent = "Error uploading the image.";
-    errorEl.style.opacity = 1;
+    displayAlert('Error uploading the image', 'error');
     return;
   }
 
@@ -218,17 +236,23 @@ form.addEventListener("submit", async (e) => {
     dateOfBirth: dateOfBirth.value
   };
 
-  submitBtn.textContent = 'Submit';
-  // TODO - find the user, if user already exists, update the details else create new user and save in the local storage
-
   const users = JSON.parse(localStorage.getItem("users")) || [];
-  users.push(userData);
-  localStorage.setItem("users", JSON.stringify(users));
-  console.log(userData);
+  const idx = users.findIndex(user => user.email == email.value);
 
-  resetInput();
-  alert('form submitted successfully.')
-  window.location.reload();
+  if (idx != -1 && isEditing) {
+    users[idx] = userData;
+  } else {
+    users.push(userData);
+  }
+
+  localStorage.setItem("users", JSON.stringify(users));
+
+  displayAlert('Form submitted successfully', 'success');
+  
+  setTimeout(() => {
+    submitBtn.textContent = "Submit";
+    resetInput();
+  }, 1500)
 });
 
 // ------------------------------------------------
@@ -240,96 +264,16 @@ resetBtn.addEventListener("click", () => {
 // ------------------------------------------------
 
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('page reloaded');
   setMaxDateToToday();
 
   formContainer.classList.add("active");
-  const users = JSON.parse(localStorage.getItem("users"));
-
-  users.forEach((user, index) => {
-    addUserInTheTable(user, index);
-  });
-
-  trashButtons = document.querySelectorAll(".fa-trash");
-
-  editButtons = document.querySelectorAll(".fa-pen-to-square");
-
-  viewButtons = document.querySelectorAll(".fa-eye");
-
-  // if user clicks on the edit button
-  editButtons.forEach((btn, index) => {
-    btn.addEventListener("click", () => {
-      submitBtn.textContent = 'Update'
-      const emailAddress = btn.closest("tr").cells[3].textContent;
-
-      const user = findUser(emailAddress);
-
-      const confirm = window.confirm("Do you want to edit this entry?");
-
-      if (!confirm) return;
-      isEditing = true;
-      tableContainer.classList.remove("active");
-      formContainer.classList.add("active");
-
-      name.value = user.name;
-      email.value = user.email;
-      number.value = user.number;
-      dateOfBirth.value = user.dateOfBirth;
-      qualification.value = user.qualification
-
-      if (user.gender.toLowerCase() === 'male') {
-        gender[0].checked = true;
-      }
-      else if (user.gender.toLowerCase() === "female") {
-        gender[1].checked = true;
-      } else {
-        user.gender[2].checked = true;
-      }
-
-      });
-  });
-
-  // add event listeners to all trash buttons
-  trashButtons.forEach((btn, index) => {
-    btn.addEventListener("click", () => {
-      const confirm = window.confirm(
-        "Are you sure you  want to delete this entry?"
-      );
-
-      if (!confirm) return;
-
-      const emailAddress = btn.closest("tr").cells[3].textContent;
-
-      const idx = users.findIndex((user) => user.email === emailAddress);
-
-      // remove the the user from the array and save the updated users array in the local storage
-      users.splice(idx, 1);
-      localStorage.setItem("users", JSON.stringify(users));
-
-      window.location.reload();
-    });
-  });
-
-  // show a modal if user clicks on the view button
-  viewButtons.forEach((btn, index) => {
-    btn.addEventListener('click', (e) => {
-      const emailAddress = e.target.closest('tr').cells[3].textContent;
-      const user = findUser(emailAddress);
-      console.log(emailAddress, user);
-      if (!user) {
-        alert("Couldn't find user.");
-        return;
-      }
-
-      backdropContainer.classList.toggle('hidden-backdrop');
-
-      createModalContent(user);
-    })
-  })
+  navLink[0].classList.add('active-link');
 })
 
-backdropContainer.addEventListener('click', () => {
-  backdropContainer.classList.toggle('hidden-backdrop');
+window.addEventListener('click', (e) => {
+  if (e.target == backdropContainer) {
+    backdropContainer.classList.toggle('hidden-backdrop');
+  }
 })
 
 navLink.forEach(link => {
@@ -337,11 +281,114 @@ navLink.forEach(link => {
     submitBtn.textContent = 'Submit';
     resetInput()
     if (e.target.textContent === 'Table') {
-      formContainer.classList.remove('active');
-      tableContainer.classList.add('active');
+      deleteExistingData();
+      // remove and add the active class manually
+      navLink[0].classList.remove('active-link');
+      navLink[1].classList.add('active-link');
+      
+      const users = JSON.parse(localStorage.getItem("users"));
+      users?.forEach((user, index) => {
+        addUserInTheTable(user, index);
+      });
+
+      trashButtons = document.querySelectorAll(".fa-trash");
+
+      editButtons = document.querySelectorAll(".fa-pen-to-square");
+
+      viewButtons = document.querySelectorAll(".fa-eye");
+
+      // if user clicks on the edit button
+      editButtons.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+          submitBtn.textContent = "Update";
+          const emailAddress = btn.closest("tr").cells[3].textContent;
+
+          const user = findUser(emailAddress);
+
+          const confirm = window.confirm("Do you want to edit this entry?");
+
+          if (!confirm) return;
+
+          navLink[0].classList.add("active-link");
+          navLink[1].classList.remove("active-link");
+
+          isEditing = true;
+          tableContainer.classList.remove("active");
+          formContainer.classList.add("active");
+
+          name.value = user.name;
+          email.value = user.email;
+          number.value = user.number;
+          dateOfBirth.value = user.dateOfBirth;
+          qualification.value = user.qualification;
+          imageContainer.setAttribute('src', user.image);
+          imageContainer.style.display = 'block';
+
+          if (user.gender.toLowerCase() === "male") {
+            gender[0].checked = true;
+          } else if (user.gender.toLowerCase() === "female") {
+            gender[1].checked = true;
+          } else {
+            user.gender[2].checked = true;
+          }
+        });
+      });
+
+      // add event listeners to all trash buttons
+      trashButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          console.log('btn clicked');
+          const confirm = window.confirm(
+            "Are you sure you  want to delete this entry?"
+          );
+
+          if (!confirm) return;
+
+          const emailAddress = btn.closest("tr").cells[3].textContent;
+
+          const idx = users.findIndex((user) => user.email === emailAddress);
+
+          // remove the the user from the array and save the updated users array in the local storage
+          users.splice(idx, 1);
+          localStorage.setItem("users", JSON.stringify(users));
+
+          // display the changes in the table
+          for (let i = 0; i < tableContainer.rows.length; i++) {
+            const row = tableContainer.rows[i];
+            for (let j = 0; j < row.cells.length; j++) {
+              const cell = row.cells[j];
+              if (cell.textContent == emailAddress) {
+                cell.closest("tr").remove();
+              }
+            }
+          }
+        });
+      });
+
+      // show a modal if user clicks on the view button
+      viewButtons.forEach((btn, index) => {
+        btn.addEventListener("click", (e) => {
+          const emailAddress = e.target.closest("tr").cells[3].textContent;
+          const user = findUser(emailAddress);
+          if (!user) {
+            alert("Couldn't find user.");
+            return;
+          }
+
+          backdropContainer.classList.toggle("hidden-backdrop");
+
+          createModalContent(user);
+        });
+      });
+      formContainer.classList.remove("active");
+      tableContainer.classList.add("active");
     } else {
-      tableContainer.classList.remove('active');
-      formContainer.classList.add('active');
+      // remove and add the active class manually
+      navLink[0].classList.add("active-link");
+      navLink[1].classList.remove("active-link");
+
+      tableContainer.classList.remove("active");
+      formContainer.classList.add("active");
     }
   })
 })
