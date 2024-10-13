@@ -48,10 +48,7 @@ function validateInput(username, email, number, qualification, dob) {
 }
 
 function displayAlert(msg, className) {
-  // reset existing styles and text content
   messageEl.classList.remove('error', 'success');
-  
-  // apply the nnew styles and display the error message
   messageEl.classList.add(className);
   messageEl.textContent = msg;
   messageEl.style.opacity = 1;
@@ -113,7 +110,7 @@ function resetInput() {
 }
 
 function findUser(email) {
-  const users = JSON.parse(localStorage.getItem('users'));
+  const users = JSON.parse(localStorage.getItem('users')) || [];
 
   if (users.length <= 0) return false;
 
@@ -238,9 +235,10 @@ form.addEventListener("submit", async (e) => {
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
   const idx = users.findIndex(user => user.email == email.value);
-
+  // TODO - on edit, it must not create a new entry.
   if (idx != -1 && isEditing) {
     users[idx] = userData;
+    console.log(isEditing, users, idx);
   } else {
     users.push(userData);
   }
@@ -318,6 +316,7 @@ navLink.forEach(link => {
 
           name.value = user.name;
           email.value = user.email;
+          email.setAttribute('disabled', true);
           number.value = user.number;
           dateOfBirth.value = user.dateOfBirth;
           qualification.value = user.qualification;
@@ -329,7 +328,7 @@ navLink.forEach(link => {
           } else if (user.gender.toLowerCase() === "female") {
             gender[1].checked = true;
           } else {
-            user.gender[2].checked = true;
+            gender[2].checked = true;
           }
         });
       });

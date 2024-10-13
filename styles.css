@@ -43,13 +43,14 @@ i{
     width: 100svw;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    /* align-items: center;
+    justify-content: center; */
 }
 
 #formHeading {
     color: grey;
     text-align: center;
+    margin-top: 4rem;
 }
 
 #userdataForm {
@@ -91,6 +92,15 @@ i{
     margin: 1rem;
 }
 
+#radioContainer {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 1rem;
+}
+
 input  {
     padding: 1rem;
     width: 45%;
@@ -117,13 +127,26 @@ select {
 .radio {
     display: flex;
     justify-content: space-between;
-    margin: 1rem auto;
+    margin: 1rem 0;
     color: grey;
+    width: fit-content;
+    width: 100%;
+}
+
+#imagePreview {
+    margin: auto;
+    height: 180px;
+    width: 200px;
+    border: 1px solid lightgrey;
+    background: url('https://media.istockphoto.com/id/931643150/vector/picture-icon.jpg?s=612x612&w=0&k=20&c=St-gpRn58eIa8EDAHpn_yO4CZZAnGD6wKpln9l3Z3Ok=') no-repeat;
+    background-position: center ;
+    background-size: contain;
+    background-color: white;
 }
 
 #imageContainer {
-    height: 150px;
-    width: 150px;
+    height: 100%;
+    width: 100%;
     display: none;
 }
 
@@ -155,6 +178,15 @@ select {
 
 .form, .table{
     display: none;
+}
+
+.table {
+    margin: 2rem auto;
+}
+
+th {
+    background-color: lightgrey;
+    min-width: 100px;
 }
 
 .active{
