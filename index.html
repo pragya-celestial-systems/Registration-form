@@ -1,108 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- data table CDN -->
-     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-  
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script> -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- jQuery CDN -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <!-- data Table CDN -->
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"
+    />
 
     <!-- font awesome CDN -->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     <!-- css stylesheet -->
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css" />
 
     <title>Registration Form</title>
-</head>
+  </head>
 
-<body>
-    <!-- <input type="file" id="profileImg">
-    <img src="" alt="profile-img"  id="img"> -->
+  <body>
     <nav id="navbar">
+      <div id="leftNav">
+        <img src="./assets/logo.png" alt="logo" id="logo" />
+      </div>
+      <div id="rightNav">
         <a href="#" class="link">Form</a>
         <a href="#" class="link">Table</a>
+      </div>
     </nav>
 
     <main id="content">
-        <div class="form">
-            <h1 id="formHeading">Registration Form</h1>
-            <form id="userdataForm">
-                <p id="message"></p>
-                <div class="box">
-                    <input type="text" id="fullName" placeholder="Full Name">
-                    <input type="email" id="email" placeholder="abc@example.com">
-                </div>
-                <div class="box">
-                    <input type="number" id="number" min="0" maxlength="10" placeholder="Phone number">
-                    <input type="file" id="profileImg" accept="image/*">
-                </div>
-                
-                <div class="box">
-                    <div id="leftBox">
-                    <input type="date" name="date-of-birth" min="01-01-1945" 
-                id="calender">
-                    </div>
-                    <div id="rightBox">
-                        <select name="qualification" id="qualification" value="Graduation">
-                            <option value="Secondary">Secondary</option>
-                            <option value="Senior Secondary">Senior Secondary</option>
-                            <option value="Graduation">Graduation</option>
-                            <option value="Post Graduation">Post Graduation</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="box">
-                    <div id="radioContainer">
-                 <div class="radio">
-                            <label for="gender">Male</label>
-                            <input type="radio" class="gender" name="gender" value="Male">
-                        </div>
-                        <div class="radio">
-                            <label for="gender">Female</label>
-                            <input type="radio" class="gender" name="gender" value="Female">
-                        </div>
-                        <div class="radio">
-                            <label for="gender">Other</label>
-                            <input type="radio" class="gender" name="gender" value="Other">
-                        </div>
-                 </div>
-                 <div id="imagePreview">
-                <img src="" alt="" id="imageContainer" />
-                </div>
-                </div>
-                <div class="btn-container">
-                    <button type="button" id="resetBtn">Reset</button>
-                    <button type="submit" id="submitBtn">Submit</button>
-                </div>
-            </form>
-        </div>
 
-        <table class="table" border="1">
-            <tr>
-                <th>Sr. No</th>
-                <th>Username</th>
-                <th>Gender</th>
-                <th>Email</th>
-                <th>Date Of Birth</th>
-                <th>Qualification</th>
-                <th>Contact</th>
-                <th>Actions</th>
-            </tr>
-        </table>
+        <!-------- form ----------->
+      <div class="form">
+        <h1 id="formHeading">Registration Form</h1>
+        <form id="userdataForm">
+          <p id="message"></p>
+          <div class="box">
+            <input type="text" id="fullName" placeholder="Username" />
+            <input type="text" id="email" placeholder="abc@example.com" />
+          </div>
+          <div class="box">
+            <input type="text" id="number" placeholder="Phone number" />
+            <input type="file" id="profileImg" accept="image/*" />
+          </div>
 
-        <div class="backdrop hidden-backdrop">
-            <div id="modal">
+          <div class="box">
+            <div id="leftBox">
+              <input
+                type="date"
+                name="date-of-birth"
+                min="01-01-1945"
+                id="calender"
+              />
             </div>
-        </div>
+            <div id="rightBox">
+              <select
+                name="qualification"
+                id="qualification"
+                value="Graduation"
+              >
+                <option value="Secondary">Secondary</option>
+                <option value="Senior Secondary">Senior Secondary</option>
+                <option value="Graduation">Graduation</option>
+                <option value="Post Graduation">Post Graduation</option>
+              </select>
+            </div>
+          </div>
+          <div class="box">
+            <div id="radioContainer">
+              <div class="radio">
+                <label for="gender">Male</label>
+                <input type="radio" class="gender" name="gender" value="Male" />
+              </div>
+              <div class="radio">
+                <label for="gender">Female</label>
+                <input
+                  type="radio"
+                  class="gender"
+                  name="gender"
+                  value="Female"
+                />
+              </div>
+              <div class="radio">
+                <label for="gender">Other</label>
+                <input
+                  type="radio"
+                  class="gender"
+                  name="gender"
+                  value="Other"
+                />
+              </div>
+            </div>
+            <div id="imagePreview">
+              <img src="" alt="" id="imageContainer" />
+            </div>
+          </div>
+          <div class="btn-container">
+            <button type="button" id="resetBtn">Reset</button>
+            <button type="submit" id="submitBtn">Submit</button>
+          </div>
+        </form>
+      </div>
+
+      <!------------- table -------------->
+      <table class="table" border="1">
+        <thead>
+          <tr>
+            <th>Sr. No</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="backdrop hidden-backdrop">
+        <div id="modal"></div>
+      </div>
     </main>
+
     <!-- --------------------------------- -->
     <script src="./script.js"></script>
-</body>
+  </body>
 </html>
