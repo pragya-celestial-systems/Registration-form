@@ -1,4 +1,4 @@
-## User Information Management Website
+## Registration Form
 
 This is a simple website where users can enter and store their personal details. The website lets users input their name, email, phone number, gender, education, and photo. After submitting the form, the data is shown in a list. Users can also update or delete their information. The website is built using **HTML**, **CSS**, and **vanilla JavaScript**. The photos are saved in **local storage** as **Blobs**. The website also includes basic **error handling** to ensure everything works smoothly.
 
